@@ -125,53 +125,6 @@ export OTEL_SERVICE_NAME=my-node-app
 
 В каждом стеке в `stacks/<stack>/` подключены реальные пакеты OpenTelemetry SDK и OTLP exporter (с возможностью обновления). Как обновлять — см. [DEPENDENCIES.md](DEPENDENCIES.md).
 
-## Публикация в GitHub
-
-Репозиторий: **[github.com/qmish/Starter-Pack](https://github.com/qmish/Starter-Pack)**.
-
-Требуется установленный [Git](https://git-scm.com/). При желании — [GitHub CLI](https://cli.github.com/) (`gh`).
-
-### Вариант 1: через веб-интерфейс и командную строку
-
-1. Создайте репозиторий на GitHub: [github.com/new](https://github.com/new)  
-   - **Repository name:** `Starter-Pack`  
-   - **Public**  
-   - Не добавляйте README, .gitignore или license (всё уже в проекте).  
-   - Нажмите **Create repository**.
-
-2. В корне проекта (каталог `StarterPack`) выполните в терминале:
-
-   ```bash
-   git init
-   git add -A
-   git commit -m "chore: initial commit - SigNoz Starter Pack"
-   git remote add origin https://github.com/qmish/Starter-Pack.git
-   git branch -M main
-   git push -u origin main
-   ```
-
-   При запросе авторизации войдите в аккаунт GitHub (логин/пароль или токен, либо SSH).
-
-### Вариант 2: скрипт (Windows / Linux, macOS)
-
-- **Windows (PowerShell):** `.\scripts\publish-to-github.ps1`  
-- **Linux/macOS:** `./scripts/publish-to-github.sh`  
-
-Скрипт инициализирует репозиторий, сделает первый коммит и предложит выполнить `git push`. Репозиторий на GitHub нужно предварительно создать вручную (шаг 1 выше).
-
-### Вариант 3: GitHub CLI
-
-Если установлен `gh` и выполнен `gh auth login`:
-
-```bash
-git init
-git add -A
-git commit -m "chore: initial commit - SigNoz Starter Pack"
-gh repo create qmish/Starter-Pack --public --source=. --remote=origin --push
-```
-
-Репозиторий будет создан и код отправлен одной командой.
-
 ## Ссылки
 
 - [SigNoz Docs](https://signoz.io/docs/)
