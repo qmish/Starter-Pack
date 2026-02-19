@@ -1,0 +1,20 @@
+{
+  "name": "signoz/starter-php",
+  "description": "PHP + OpenTelemetry SDK and OTLP exporter for SigNoz (starter)",
+  "type": "project",
+  "require": {
+    "php": ">=8.0",
+    "open-telemetry/sdk": "^1.0",
+    "open-telemetry/exporter-otlp": "^1.0",
+    "php-http/guzzle7-adapter": "^1.0"
+  },
+  "require-dev": {},
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": false
+    }
+  },
+  "autoload": {
+    "psr-4": {}
+  }
+}

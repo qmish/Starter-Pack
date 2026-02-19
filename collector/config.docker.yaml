@@ -1,0 +1,63 @@
+# =============================================================================
+# OpenTelemetry Collector — только Docker: OTLP + логи контейнеров
+# Минимальный вариант для хоста, где приложения работают в Docker.
+# Метрики хоста и файловые логи не собираются.
+#
+# Замените <SIGNOZ_ENDPOINT> и <INGESTION_KEY> (для Cloud).
+# =============================================================================
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+
+  filelog/docker:
+    include: [/var/lib/docker/containers/*/*-json.log]
+    poll_interval: 200ms
+    start_at: end
+    include_file_name: false
+    include_file_path: false
+    operators:
+      - id: container-parser
+        type: container
+        format: docker
+
+processors:
+  batch: {}
+  resourcedetection:
+    detectors: [env, system, docker]
+    timeout: 5s
+
+exporters:
+  otlp:
+    endpoint: "<SIGNOZ_ENDPOINT>"
+    tls:
+      insecure: false
+    headers:
+      "signoz-ingestion-key": "<INGESTION_KEY>"
+
+  debug:
+    verbosity: normal
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]
+    logs:
+      receivers: [otlp, filelog/docker]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]

@@ -1,0 +1,35 @@
+# OpenTelemetry Collector для SigNoz — запуск на хосте с Docker
+#
+# Перед запуском:
+# 1. Скопируйте collector/config.full.yaml (или config.docker.yaml) в collector/config.yaml.
+# 2. В config.yaml замените <SIGNOZ_ENDPOINT> и <INGESTION_KEY> (для Cloud).
+# 3. Запуск: docker compose -f docker-compose.collector.yml up -d
+#
+# Для сбора логов контейнеров коллектору нужен доступ к /var/lib/docker/containers.
+# На Linux раскомментируйте секцию volumes и user в сервисе collector.
+
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.130.1
+    container_name: signoz-otel-collector
+    restart: unless-stopped
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "13133:13133" # health_check
+    volumes:
+      - ./collector/config.yaml:/etc/otelcol-contrib/config.yaml:ro
+      # Раскомментируйте для сбора логов Docker-контейнеров и полного доступа к хосту (Linux):
+      # - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+      # - /proc:/hostfs/proc:ro
+      # - /sys:/hostfs/sys:ro
+      # - /:/hostfs:ro
+    # environment:
+    #   HOST_PROC: /hostfs/proc
+    #   HOST_SYS: /hostfs/sys
+    #   HOST_ROOT: /hostfs
+    # user: "0:0"
+    # pid: host
+    # network_mode: host  # опционально, если приложения на том же хосте
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]

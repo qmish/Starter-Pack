@@ -1,0 +1,11 @@
+# Пример values для установки SigNoz в Kubernetes (Helm)
+# Использование: helm install signoz signoz/signoz -n signoz --create-namespace -f signoz-values.example.yaml
+# Замените <storage-class> на имя вашего StorageClass (kubectl get storageclass)
+
+global:
+  storageClass: <storage-class>
+
+clickhouse:
+  installCustomStorageClass: true
+
+# Опционально: лимиты ресурсов, retention и т.д. — см. https://github.com/SigNoz/charts/tree/main/charts/signoz

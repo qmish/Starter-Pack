@@ -1,0 +1,67 @@
+# =============================================================================
+# Процессоры для фильтрации логов по уровню (severity) и коду ошибки
+# Вставьте эти процессоры в свой config.*.yaml и подключите в пайплайн logs.
+# Подключение: в service.pipelines.logs.processors добавьте нужный filter после resourcedetection, перед batch.
+#
+# Документация: docs/LOGGING_FILTERING.md
+# =============================================================================
+
+# --- Вариант 1: Отбросить TRACE и DEBUG (оставить INFO и выше) ---
+# processors:
+#   filter/drop-below-info:
+#     logs:
+#       log_record:
+#         - 'severity_number < SEVERITY_NUMBER_INFO'
+#     error_mode: ignore
+
+# --- Вариант 2: Оставить только WARN и выше ---
+# processors:
+#   filter/drop-below-warn:
+#     logs:
+#       log_record:
+#         - 'severity_number < SEVERITY_NUMBER_WARN'
+#     error_mode: ignore
+
+# --- Вариант 3: Оставить только ERROR и выше ---
+# processors:
+#   filter/drop-below-error:
+#     logs:
+#       log_record:
+#         - 'severity_number < SEVERITY_NUMBER_ERROR'
+#     error_mode: ignore
+
+# --- Вариант 4: Отбросить логи с определённым кодом ошибки ---
+# (если в логах есть атрибут error.code)
+# processors:
+#   filter/drop-by-error-code:
+#     logs:
+#       log_record:
+#         - 'attributes["error.code"] == "E_IGNORE"'
+#     error_mode: ignore
+
+# --- Вариант 5: Разные правила по сервису (отбросить DEBUG только у service-a) ---
+# processors:
+#   filter/drop-debug-service-a:
+#     logs:
+#       log_record:
+#         - 'resource["service.name"] == "service-a" and severity_number < SEVERITY_NUMBER_INFO'
+#     error_mode: ignore
+
+# --- Пример полного блока processors с фильтром по уровню ---
+# processors:
+#   resourcedetection:
+#     detectors: [env, system, docker]
+#     timeout: 5s
+#   filter/drop-debug:
+#     logs:
+#       log_record:
+#         - 'severity_number < SEVERITY_NUMBER_INFO'
+#     error_mode: ignore
+#   batch: {}
+#
+# service:
+#   pipelines:
+#     logs:
+#       receivers: [otlp, filelog/docker, filelog/host]
+#       processors: [resourcedetection, filter/drop-debug, batch]
+#       exporters: [otlp]

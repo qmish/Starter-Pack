@@ -1,0 +1,13 @@
+# Пример экспорта для Self-Hosted SigNoz (без ingestion key).
+# Скопируйте этот блок exporters в свой config.*.yaml вместо блока otlp.
+#
+# exporters:
+#   otlp:
+#     endpoint: "signoz:4317"
+#     tls:
+#       insecure: true
+#   debug:
+#     verbosity: normal
+#
+# Если SigNoz доступен по имени сервиса (Docker Compose), используйте "signoz:4317".
+# Если коллектор на том же хосте — "localhost:4317".

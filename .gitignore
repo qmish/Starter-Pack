@@ -1,0 +1,31 @@
+# Локальный конфиг коллектора (может содержать endpoint и ключ)
+collector/config.yaml
+
+# Локальные секреты
+.env
+.env.local
+*.env.local
+
+# Служебные каталоги
+.idea/
+.vscode/
+__pycache__/
+node_modules/
+*.pyc
+.venv/
+venv/
+vendor/
+*.egg-info/
+
+# Go
+stacks/go/go.sum
+
+# Java
+stacks/java/target/
+*.jar
+*.war
+
+# .NET
+stacks/dotnet/bin/
+stacks/dotnet/obj/
+*.user

@@ -1,0 +1,52 @@
+# Пример values для чарта k8s-infra — сбор телеметрии из кластера (логи подов, метрики нод, OTLP)
+# Использование: helm install my-release signoz/k8s-infra -n platform --create-namespace -f k8s-infra-values.example.yaml
+# Перед установкой замените: clusterName, deploymentEnvironment, otelCollectorEndpoint, signozApiKey (для Cloud)
+
+global:
+  cloud: others
+  clusterName: my-cluster
+  deploymentEnvironment: production
+
+# --- SigNoz Cloud ---
+# otelCollectorEndpoint: ingest.us.signoz.cloud:443   # или ingest.eu.signoz.cloud, ingest.in.signoz.cloud
+# otelInsecure: false
+# signozApiKey: <your-ingestion-key>
+
+# --- Self-hosted SigNoz (в том же кластере, namespace signoz) ---
+otelCollectorEndpoint: signoz-otel-collector.signoz.svc.cluster.local:4317
+otelInsecure: true
+signozApiKey: ""
+
+presets:
+  otlpExporter:
+    enabled: true
+  # Сбор логов подов кластера (filelog /var/log/pods)
+  logsCollection:
+    enabled: true
+    startAt: end
+    includeFilePath: true
+    includeFileName: false
+    blacklist:
+      enabled: true
+      signozLogs: true
+      namespaces:
+        - kube-system
+      pods: []
+      containers: []
+  # Метрики нод (CPU, память, диск, сеть)
+  hostMetrics:
+    enabled: true
+    collectionInterval: 30s
+  # Метрики kubelet (поды, контейнеры)
+  kubeletMetrics:
+    enabled: true
+    collectionInterval: 30s
+  # Метаданные K8s (namespace, pod name, deployment и т.д.)
+  kubernetesAttributes:
+    enabled: true
+  # Метрики уровня кластера (узлы, ресурсы)
+  clusterMetrics:
+    enabled: true
+  # События Kubernetes
+  k8sEvents:
+    enabled: true

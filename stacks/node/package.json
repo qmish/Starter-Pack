@@ -1,0 +1,20 @@
+{
+  "name": "signoz-starter-node",
+  "version": "1.0.0",
+  "description": "Node.js + OpenTelemetry SDK and OTLP exporter for SigNoz (starter)",
+  "private": true,
+  "scripts": {
+    "start": "node index.js",
+    "update:otel": "npm update @opentelemetry/sdk-node @opentelemetry/exporter-trace-otlp-grpc @opentelemetry/exporter-metrics-otlp-grpc @opentelemetry/auto-instrumentations-node"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/sdk-node": "^0.54.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "^0.54.0",
+    "@opentelemetry/exporter-metrics-otlp-grpc": "^0.54.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.46.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
