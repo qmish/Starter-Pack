@@ -1,0 +1,12 @@
+# Скопируйте в all.yml и заполните (all.yml в .gitignore не добавляем — пример только)
+signoz_endpoint: "ingest.us.signoz.cloud:443"
+signoz_ingestion_key: ""   # для SigNoz Cloud — ключ; для self-hosted — пусто
+
+collector_version: "0.130.1"
+collector_install_method: "binary"   # binary | docker
+collector_config_path: "/etc/otelcol-contrib/config.yaml"
+
+# Пути к логам для filelog (список)
+collector_filelog_paths:
+  - /var/log/syslog
+  # - /var/log/nginx/access.log

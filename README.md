@@ -48,6 +48,8 @@ docker compose -f docker-compose.collector.yml up -d
 
 **VM / виртуализация:** см. [docs/VM_SETUP.md](docs/VM_SETUP.md). Развёртывание в VMware, Hyper-V, KVM — [docs/DEPLOYMENT_VIRTUALIZATION.md](docs/DEPLOYMENT_VIRTUALIZATION.md).
 
+**Terraform (Docker) и Ansible (VM):** развёртывание коллектора через IaC — [docs/TERRAFORM_ANSIBLE.md](docs/TERRAFORM_ANSIBLE.md) ([terraform/](terraform/), [ansible/](ansible/)).
+
 ### 4. Подключение приложения
 
 Выберите стек в `stacks/` и задайте переменные окружения (или используйте `stacks/<stack>/env.example`):
@@ -91,6 +93,8 @@ export OTEL_SERVICE_NAME=my-node-app
 │   ├── dotnet/
 │   └── php/
 ├── alerts/                      # Алертинг (Alertmanager, примеры правил)
+├── terraform/                   # Terraform: коллектор в Docker (collector-docker)
+├── ansible/                     # Ansible: роль установки коллектора на VM
 └── docs/                        # Документация
     ├── HOST_LOGS.md
     ├── ALERTING.md
@@ -101,6 +105,7 @@ export OTEL_SERVICE_NAME=my-node-app
     ├── LOGGING_DOCKER_K8S.md          # Логи Docker-контейнеров и подов K8s
     ├── LOGGING_FILTERING.md           # Фильтрация логов по уровням и кодам ошибок
     ├── TRACING_SETUP.md               # Трассировка по стекам и системам
+    ├── TERRAFORM_ANSIBLE.md           # Развёртывание коллектора: Terraform, Ansible
     └── RUNBOOK.md                     # Чеклист первого запуска, демо по стекам
 ```
 
@@ -131,6 +136,7 @@ export OTEL_SERVICE_NAME=my-node-app
 - [LOGGING_DOCKER_K8S.md](docs/LOGGING_DOCKER_K8S.md) — логирование Docker-контейнеров и подов Kubernetes.
 - [LOGGING_FILTERING.md](docs/LOGGING_FILTERING.md) — фильтрация логов по уровням (severity) и кодам ошибок, по стекам и системам.
 - [TRACING_SETUP.md](docs/TRACING_SETUP.md) — сбор и настройка трассировки по стекам и системам (sampling, атрибуты, распространение контекста).
+- [TERRAFORM_ANSIBLE.md](docs/TERRAFORM_ANSIBLE.md) — развёртывание коллектора через Terraform (Docker) и Ansible (VM).
 - [RUNBOOK.md](docs/RUNBOOK.md) — чеклист первого запуска и запуск демо-приложений по стекам.
 
 ## Зависимости и обновление SDK

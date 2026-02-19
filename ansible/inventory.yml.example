@@ -1,0 +1,12 @@
+# Скопируйте в inventory.yml и укажите хосты (inventory.yml не коммитить с секретами)
+all:
+  children:
+    signoz_collectors:
+      hosts:
+        collector-vm-01:
+          ansible_host: 192.168.1.10
+        # collector-vm-02:
+        #   ansible_host: 192.168.1.11
+      vars:
+        ansible_user: ubuntu
+        # ansible_ssh_private_key_file: ~/.ssh/id_rsa

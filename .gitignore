@@ -35,3 +35,14 @@ scripts/reword-first.ps1
 scripts/set-commit-msg.ps1
 scripts/publish-to-github.ps1
 scripts/publish-to-github.sh
+
+# Terraform
+terraform/**/.terraform/
+terraform/**/.terraform.lock.hcl
+terraform/**/*.tfstate
+terraform/**/*.tfstate.*
+terraform/**/config.generated.yaml
+
+# Ansible (локальные инвентарь и переменные с секретами)
+ansible/group_vars/all.yml
+ansible/inventory.yml

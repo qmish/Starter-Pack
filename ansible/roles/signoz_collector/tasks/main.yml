@@ -1,0 +1,46 @@
+---
+- name: Ensure collector dirs exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0755"
+  loop:
+    - "{{ collector_binary_dir }}"
+    - "{{ collector_binary_dir }}/bin"
+    - "{{ (collector_config_path | dirname) }}"
+
+- name: Download OpenTelemetry Collector Contrib
+  get_url:
+    url: "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/download/v{{ collector_version }}/otelcol-contrib_{{ collector_version }}_linux_amd64.tar.gz"
+    dest: "/tmp/otelcol-contrib.tar.gz"
+    mode: "0644"
+  when: collector_install_method == "binary"
+
+- name: Unarchive collector
+  unarchive:
+    src: "/tmp/otelcol-contrib.tar.gz"
+    dest: "{{ collector_binary_dir }}/bin"
+    remote_src: true
+    creates: "{{ collector_binary_dir }}/bin/otelcol-contrib"
+  when: collector_install_method == "binary"
+
+- name: Deploy collector config
+  template:
+    src: config.yaml.j2
+    dest: "{{ collector_config_path }}"
+    mode: "0644"
+  notify: Restart otelcol-contrib
+
+- name: Install systemd unit
+  template:
+    src: otelcol-contrib.service.j2
+    dest: /etc/systemd/system/otelcol-contrib.service
+    mode: "0644"
+  notify: Restart otelcol-contrib
+
+- name: Enable and start collector
+  systemd:
+    name: otelcol-contrib
+    daemon_reload: true
+    enabled: true
+    state: started

@@ -1,0 +1,11 @@
+---
+# Установка OpenTelemetry Collector (Contrib) на VM для отправки телеметрии в SigNoz.
+# Использование:
+#   cp group_vars/all.yml.example group_vars/all.yml
+#   Редактировать group_vars/all.yml: signoz_endpoint, signoz_ingestion_key
+#   ansible-playbook -i inventory.yml playbook.yml
+- name: Deploy SigNoz OTel Collector
+  hosts: signoz_collectors
+  become: true
+  roles:
+    - signoz_collector

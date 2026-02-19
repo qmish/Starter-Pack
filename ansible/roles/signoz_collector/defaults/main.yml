@@ -1,0 +1,8 @@
+signoz_endpoint: ""
+signoz_ingestion_key: ""
+collector_version: "0.130.1"
+collector_install_method: "binary"
+collector_config_path: "/etc/otelcol-contrib/config.yaml"
+collector_binary_dir: "/usr/local/otelcol-contrib"
+collector_filelog_paths:
+  - /var/log/syslog

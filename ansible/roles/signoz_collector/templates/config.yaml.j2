@@ -1,0 +1,71 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  hostmetrics:
+    collection_interval: 60s
+    scrapers:
+      cpu: {}
+      disk: {}
+      load: {}
+      filesystem: {}
+      memory: {}
+      network: {}
+      paging: {}
+      process:
+        mute_process_name_error: true
+        mute_process_exe_error: true
+        mute_process_io_error: true
+      processes: {}
+      system: {}
+  filelog/host:
+    include:
+{% for p in collector_filelog_paths %}
+      - {{ p }}
+{% endfor %}
+    poll_interval: 500ms
+    start_at: end
+    include_file_name: true
+    operators:
+      - type: add
+        field: resource["log.source"]
+        value: "host-file"
+
+processors:
+  batch: {}
+  resourcedetection:
+    detectors: [env, system]
+    timeout: 5s
+
+exporters:
+  otlp:
+    endpoint: "{{ signoz_endpoint }}"
+    tls:
+      insecure: false
+    headers:
+      "signoz-ingestion-key": "{{ signoz_ingestion_key }}"
+  debug:
+    verbosity: normal
+
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]
+    metrics:
+      receivers: [otlp, hostmetrics]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]
+    logs:
+      receivers: [otlp, filelog/host]
+      processors: [resourcedetection, batch]
+      exporters: [otlp]
