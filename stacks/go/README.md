@@ -1,9 +1,9 @@
 # Go + SigNoz
 
-1. Подключите OpenTelemetry SDK и OTLP exporter в коде (например `go.opentelemetry.io/otel`, `otel export/otlp`).
+Демо: HTTP-сервер с трейсами в OTLP.
 
-2. Задайте переменные из `env.example`.
-
-3. Соберите и запустите приложение. Трейсы/метрики уйдут в коллектор.
+1. Зависимости: `go mod tidy`
+2. Переменные из `env.example` (минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317`, `OTEL_SERVICE_NAME=go-demo`).
+3. Запуск: `go run .` — сервер на http://localhost:8080. Сделайте запросы и проверьте трейсы в SigNoz.
 
 Подробнее: [SigNoz — Golang](https://signoz.io/docs/instrumentation/golang/).

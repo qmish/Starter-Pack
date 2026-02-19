@@ -61,6 +61,16 @@ export OTEL_SERVICE_NAME=my-node-app
 
 Перезапустите приложение. Трейсы/метрики/логи появятся в SigNoz.
 
+### Чеклист первого запуска
+
+1. **SigNoz** — Cloud или self-hosted; записать endpoint и при необходимости Ingestion Key.
+2. **`.env`** — скопировать из `.env.example`, указать `SIGNOZ_OTEL_ENDPOINT` и `SIGNOZ_INGESTION_KEY` (для Cloud).
+3. **Конфиг коллектора** — выполнить `.\scripts\prepare-config.ps1 -Preset full` (Windows) или `./scripts/prepare-config.sh full` (Linux/macOS), либо вручную скопировать `collector/config.full.yaml` в `collector/config.yaml` и подставить endpoint/key.
+4. **Коллектор** — `docker compose -f docker-compose.collector.yml up -d`.
+5. **Демо по стеку** — в каталоге `stacks/<stack>` установить зависимости и запустить приложение (см. [docs/RUNBOOK.md](docs/RUNBOOK.md) и `stacks/<stack>/README.md`).
+
+Полный пошаговый чеклист и команды по стекам — [docs/RUNBOOK.md](docs/RUNBOOK.md).
+
 ## Структура репозитория
 
 ```
@@ -90,7 +100,8 @@ export OTEL_SERVICE_NAME=my-node-app
     ├── KUBERNETES_HELM.md             # Kubernetes, Helm (SigNoz + k8s-infra)
     ├── LOGGING_DOCKER_K8S.md          # Логи Docker-контейнеров и подов K8s
     ├── LOGGING_FILTERING.md           # Фильтрация логов по уровням и кодам ошибок
-    └── TRACING_SETUP.md               # Трассировка по стекам и системам
+    ├── TRACING_SETUP.md               # Трассировка по стекам и системам
+    └── RUNBOOK.md                     # Чеклист первого запуска, демо по стекам
 ```
 
 ## Выбор конфигурации коллектора
@@ -120,6 +131,7 @@ export OTEL_SERVICE_NAME=my-node-app
 - [LOGGING_DOCKER_K8S.md](docs/LOGGING_DOCKER_K8S.md) — логирование Docker-контейнеров и подов Kubernetes.
 - [LOGGING_FILTERING.md](docs/LOGGING_FILTERING.md) — фильтрация логов по уровням (severity) и кодам ошибок, по стекам и системам.
 - [TRACING_SETUP.md](docs/TRACING_SETUP.md) — сбор и настройка трассировки по стекам и системам (sampling, атрибуты, распространение контекста).
+- [RUNBOOK.md](docs/RUNBOOK.md) — чеклист первого запуска и запуск демо-приложений по стекам.
 
 ## Зависимости и обновление SDK
 

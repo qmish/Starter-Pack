@@ -4,7 +4,7 @@
   "description": "Node.js + OpenTelemetry SDK and OTLP exporter for SigNoz (starter)",
   "private": true,
   "scripts": {
-    "start": "node index.js",
+    "start": "node --require @opentelemetry/auto-instrumentations-node/register index.js",
     "update:otel": "npm update @opentelemetry/sdk-node @opentelemetry/exporter-trace-otlp-grpc @opentelemetry/exporter-metrics-otlp-grpc @opentelemetry/auto-instrumentations-node"
   },
   "dependencies": {

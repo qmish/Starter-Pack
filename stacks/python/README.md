@@ -1,15 +1,9 @@
 # Python + SigNoz
 
-1. Установите пакеты, например:
-   - `opentelemetry-api`, `opentelemetry-sdk`
-   - `opentelemetry-exporter-otlp`
-   - Или авто-инструментация: `opentelemetry-distro`, `opentelemetry-instrumentation-*`
+Демо: минимальный HTTP-сервер с трейсами в OTLP.
 
-2. Используйте переменные из `env.example`.
-
-3. Запуск с авто-инструментацией (пример):
-   ```bash
-   opentelemetry-instrument python app.py
-   ```
+1. Установите зависимости: `pip install -r requirements.txt`
+2. Задайте переменные из `env.example` (минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317`, `OTEL_SERVICE_NAME=python-demo`).
+3. Запуск: `python app.py` — сервер на http://localhost:8080. Сделайте запросы и проверьте трейсы в SigNoz.
 
 Подробнее: [SigNoz — Python](https://signoz.io/docs/instrumentation/python/).

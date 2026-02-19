@@ -51,17 +51,15 @@ composer require \
 - `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318` (HTTP OTLP)
 - `OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf`
 
-### 4. Запуск
+### 4. Запуск демо
+
+Задайте переменные из `env.example` (для коллектора: `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318`, `OTEL_SERVICE_NAME=php-demo`). Затем:
 
 ```bash
-# Встроенный сервер
-php -S localhost:8080 app.php
-
-# Laravel
-php artisan serve
+php -S localhost:8080
 ```
 
-В Apache/Nginx задайте те же переменные через `SetEnv` (Apache) или `fastcgi_param` / env-файл (PHP-FPM).
+Откройте http://localhost:8080 в браузере и проверьте трейсы в SigNoz.
 
 ## Проверка
 
