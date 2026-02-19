@@ -29,3 +29,9 @@ stacks/java/target/
 stacks/dotnet/bin/
 stacks/dotnet/obj/
 *.user
+
+# Локальные скрипты (не коммитить в репозиторий)
+scripts/reword-first.ps1
+scripts/set-commit-msg.ps1
+scripts/publish-to-github.ps1
+scripts/publish-to-github.sh
