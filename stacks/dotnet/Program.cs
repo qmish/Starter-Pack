@@ -1,3 +1,4 @@
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -8,9 +9,18 @@ builder.Services.AddOpenTelemetry()
         serviceName: Environment.GetEnvironmentVariable("OTEL_SERVICE_NAME") ?? "dotnet-demo"))
     .WithTracing(tracing => tracing
         .AddAspNetCoreInstrumentation()
+        .AddOtlpExporter())
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
         .AddOtlpExporter());
 
 var app = builder.Build();
+
+app.MapGet("/health", () => new
+{
+    status = "ok",
+    service = Environment.GetEnvironmentVariable("OTEL_SERVICE_NAME") ?? "dotnet-demo"
+});
 
 app.MapGet("/", () => new
 {

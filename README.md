@@ -106,6 +106,7 @@ export OTEL_SERVICE_NAME=my-node-app
     ├── LOGGING_FILTERING.md           # Фильтрация логов по уровням и кодам ошибок
     ├── TRACING_SETUP.md               # Трассировка по стекам и системам
     ├── TERRAFORM_ANSIBLE.md           # Развёртывание коллектора: Terraform, Ansible
+    ├── STACKS_CHECKLIST.md            # Чек-лист доработок стеков (health, метрики, shutdown)
     └── RUNBOOK.md                     # Чеклист первого запуска, демо по стекам
 ```
 
@@ -137,6 +138,7 @@ export OTEL_SERVICE_NAME=my-node-app
 - [LOGGING_FILTERING.md](docs/LOGGING_FILTERING.md) — фильтрация логов по уровням (severity) и кодам ошибок, по стекам и системам.
 - [TRACING_SETUP.md](docs/TRACING_SETUP.md) — сбор и настройка трассировки по стекам и системам (sampling, атрибуты, распространение контекста).
 - [TERRAFORM_ANSIBLE.md](docs/TERRAFORM_ANSIBLE.md) — развёртывание коллектора через Terraform (Docker) и Ansible (VM).
+- [STACKS_CHECKLIST.md](docs/STACKS_CHECKLIST.md) — чек-лист доработок стеков (health, метрики, shutdown, resource attrs, SigNoz Cloud).
 - [RUNBOOK.md](docs/RUNBOOK.md) — чеклист первого запуска и запуск демо-приложений по стекам.
 
 ## Зависимости и обновление SDK

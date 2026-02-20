@@ -19,6 +19,7 @@ vendor/
 
 # Go
 stacks/go/go.sum
+stacks/go/*.exe
 
 # Java
 stacks/java/target/
