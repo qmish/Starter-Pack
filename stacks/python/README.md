@@ -1,6 +1,6 @@
 # Python + SigNoz
 
-Демо: минимальный HTTP-сервер с трейсами в OTLP.
+Демо: WSGI HTTP-сервер с трейсами и метриками в OTLP, автоинструментация через OpenTelemetryMiddleware.
 
 1. Установите зависимости: `pip install -r requirements.txt`
 2. Задайте переменные из `env.example` (минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317`, `OTEL_SERVICE_NAME=python-demo`).

@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Minimal HTTP server with OpenTelemetry tracing and metrics to SigNoz (OTLP)."""
+"""Minimal HTTP server with OpenTelemetry tracing and metrics to SigNoz (OTLP).
+Uses WSGI + opentelemetry-instrumentation-wsgi for auto-instrumentation of HTTP requests.
+"""
 
 import os
 import json
 import signal
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from wsgiref.simple_server import make_server
 
 from opentelemetry import trace, metrics
+from opentelemetry.instrumentation.wsgi import OpenTelemetryMiddleware
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.metrics import MeterProvider
@@ -53,7 +56,6 @@ tracer_provider = TracerProvider(resource=resource)
 trace_exp = OTLPSpanExporter(endpoint=endpoint, insecure=True, headers=headers)
 tracer_provider.add_span_processor(BatchSpanProcessor(trace_exp))
 trace.set_tracer_provider(tracer_provider)
-tracer = trace.get_tracer(__name__, "1.0.0")
 
 metric_exp = OTLPMetricExporter(endpoint=endpoint, insecure=True, headers=headers)
 reader = PeriodicExportingMetricReader(metric_exp, export_interval_millis=30000)
@@ -63,29 +65,23 @@ meter = metrics.get_meter(__name__, "1.0.0")
 request_counter = meter.create_counter("demo_requests_total", description="Total requests")
 
 
-class Handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path == "/health":
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            self.wfile.write(json.dumps({"status": "ok", "service": os.getenv("OTEL_SERVICE_NAME", "python-demo")}).encode())
-            return
-        with tracer.start_as_current_span("handle_request") as span:
-            span.set_attribute("http.url", self.path)
-            request_counter.add(1)
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json")
-            self.end_headers()
-            body = json.dumps({
-                "message": "SigNoz Python demo",
-                "service": os.getenv("OTEL_SERVICE_NAME", "python-demo"),
-                "path": self.path,
-            }).encode()
-            self.wfile.write(body)
+def application(environ, start_response):
+    path = environ.get("PATH_INFO", "/")
+    service_name = os.getenv("OTEL_SERVICE_NAME", "python-demo")
+    if path == "/health":
+        body = json.dumps({"status": "ok", "service": service_name}).encode()
+    else:
+        request_counter.add(1)
+        body = json.dumps({
+            "message": "SigNoz Python demo",
+            "service": service_name,
+            "path": path,
+        }).encode()
+    start_response("200 OK", [("Content-Type", "application/json")])
+    return [body]
 
-    def log_message(self, format, *args):
-        pass
+
+app = OpenTelemetryMiddleware(application)
 
 
 def shutdown(signum=None, frame=None):
@@ -96,7 +92,7 @@ def shutdown(signum=None, frame=None):
 if __name__ == "__main__":
     signal.signal(signal.SIGTERM, shutdown)
     port = int(os.getenv("PORT", "8080"))
-    server = HTTPServer(("", port), Handler)
+    server = make_server("", port, app)
     print(f"Server listening on http://localhost:{port}")
     print("Send requests to see traces in SigNoz (OTLP to localhost:4317).")
     try:

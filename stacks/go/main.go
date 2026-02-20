@@ -15,6 +15,7 @@ import (
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
@@ -61,7 +62,6 @@ func main() {
 	)
 	otel.SetTracerProvider(tp)
 	otel.SetMeterProvider(mp)
-	tracer := otel.Tracer("go-demo")
 	meter := otel.Meter("go-demo")
 	requestCounter, _ := meter.Int64Counter("demo_requests_total")
 
@@ -74,13 +74,12 @@ func main() {
 		os.Exit(0)
 	}()
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok", "service": getEnv("OTEL_SERVICE_NAME", "go-demo")})
 	})
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		_, span := tracer.Start(r.Context(), "handle_request")
-		defer span.End()
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		requestCounter.Add(r.Context(), 1)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{
@@ -89,10 +88,12 @@ func main() {
 			"path":    r.URL.Path,
 		})
 	})
+	handler := otelhttp.NewHandler(mux, "go-demo",
+		otelhttp.WithServerName(getEnv("OTEL_SERVICE_NAME", "go-demo")))
 	port := getEnv("PORT", "8080")
 	log.Printf("Server listening on http://localhost:%s", port)
 	log.Print("Send requests to see traces in SigNoz (OTLP to localhost:4317).")
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, handler))
 }
 
 func getEnv(key, def string) string {

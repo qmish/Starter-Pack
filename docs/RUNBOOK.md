@@ -28,7 +28,7 @@
 | **Python** | `stacks/python` | `pip install -r requirements.txt` | `python app.py` | http://localhost:8080 |
 | **Go** | `stacks/go` | `go mod tidy` | `go run .` | http://localhost:8080 |
 | **.NET** | `stacks/dotnet` | `dotnet restore` | `dotnet run` | http://localhost:8080 |
-| **Java** | `stacks/java` | `mvn compile` | `mvn exec:java` | http://localhost:8080 |
+| **Java** | `stacks/java` | `mvn compile` | `mvn exec:java` или `mvn exec:java -Pagent` (с автоинструментацией) | http://localhost:8080 |
 | **PHP** | `stacks/php` | `composer install` | `php -S localhost:8080` | http://localhost:8080 |
 
 Перед запуском задайте переменные окружения из `env.example` в каталоге стека (или экспортируйте в shell). Минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317`, `OTEL_SERVICE_NAME=<имя-сервиса>`.

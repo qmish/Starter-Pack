@@ -12,6 +12,8 @@
   <description>Java + OpenTelemetry SDK and OTLP exporter for SigNoz (starter)</description>
 
   <properties>
+    <javaagent.version>2.19.0</javaagent.version>
+    <javaagent.jvmarg></javaagent.jvmarg>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -38,14 +40,22 @@
       <version>${opentelemetry.version}</version>
     </dependency>
     <!-- Optional: auto-instrumentation agent (use as -javaagent) -->
-    <!--
     <dependency>
       <groupId>io.opentelemetry.javaagent</groupId>
       <artifactId>opentelemetry-javaagent</artifactId>
       <version>2.19.0</version>
+      <scope>runtime</scope>
     </dependency>
-    -->
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>agent</id>
+      <properties>
+        <javaagent.jvmarg>-javaagent:${settings.localRepository}/io/opentelemetry/javaagent/opentelemetry-javaagent/${javaagent.version}/opentelemetry-javaagent-${javaagent.version}.jar</javaagent.jvmarg>
+      </properties>
+    </profile>
+  </profiles>
 
   <build>
     <plugins>
@@ -60,6 +70,8 @@
         <version>3.5.0</version>
         <configuration>
           <mainClass>io.signoz.starter.App</mainClass>
+          <classpathScope>runtime</classpathScope>
+          <jvmArguments>${javaagent.jvmarg}</jvmArguments>
         </configuration>
       </plugin>
     </plugins>

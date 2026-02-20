@@ -59,11 +59,11 @@
 ## 7. Автоинструментация
 
 - [x] Node.js — `@opentelemetry/auto-instrumentations-node` (--require при запуске)
-- [ ] Python — `opentelemetry-instrumentation` в deps; демо — ручные spans
-- [ ] Go — нет (ручная инструментация)
+- [x] Python — `opentelemetry-instrumentation-wsgi` + OpenTelemetryMiddleware (WSGI)
+- [x] Go — `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp`
 - [x] .NET — `AddAspNetCoreInstrumentation`, `AddHttpClientInstrumentation`
-- [ ] Java — опционально `-javaagent:opentelemetry-javaagent.jar` (закомментировано в pom)
-- [ ] PHP — опционально `OTEL_PHP_AUTOLOAD_ENABLED` + auto-пакеты под фреймворк
+- [x] Java — `-Pagent` для запуска с `-javaagent:opentelemetry-javaagent.jar`
+- [ ] PHP — опционально `OTEL_PHP_AUTOLOAD_ENABLED` + auto-пакеты под фреймворк (Laravel и др.)
 
 ---
 
@@ -72,10 +72,10 @@
 | Стек   | Health | Bootstrap | Метрики | Shutdown | Resource attrs | Cloud headers | Автоинструментация |
 |--------|--------|-----------|---------|----------|----------------|---------------|--------------------|
 | Node   | [x]    | —         | auto    | [x]      | auto           | auto          | [x]                |
-| Python | [x]    | —         | [x]     | [x]      | [x]            | [x]           | опц.               |
-| Go     | [x]    | —         | [x]     | [x]      | [x]            | [x]           | —                  |
+| Python | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
+| Go     | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
 | .NET   | [x]    | —         | [x]     | [x]      | auto           | auto          | [x]                |
-| Java   | [x]    | —         | [x]     | [x]      | [x]            | [x]           | опц.               |
+| Java   | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
 | PHP    | [x]    | [x]       | —       | —        | —              | —             | опц.               |
 
 ---

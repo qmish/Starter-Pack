@@ -1,6 +1,6 @@
 # Go + SigNoz
 
-Демо: HTTP-сервер с трейсами в OTLP.
+Демо: HTTP-сервер с трейсами и метриками в OTLP, автоинструментация через otelhttp.
 
 1. Зависимости: `go mod tidy`
 2. Переменные из `env.example` (минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=localhost:4317`, `OTEL_SERVICE_NAME=go-demo`).
