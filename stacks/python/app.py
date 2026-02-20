@@ -5,10 +5,11 @@ Uses WSGI + opentelemetry-instrumentation-wsgi for auto-instrumentation of HTTP 
 
 import os
 import json
+import logging
 import signal
 from wsgiref.simple_server import make_server
 
-from opentelemetry import trace, metrics
+from opentelemetry import trace, metrics, _logs  # noqa: F401 - _logs for set_logger_provider
 from opentelemetry.instrumentation.wsgi import OpenTelemetryMiddleware
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
@@ -17,6 +18,9 @@ from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry.exporter.otlp.proto.grpc._log_exporter import OTLPLogExporter
+from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+from opentelemetry.sdk._logs.export import BatchLogRecordProcessor
 
 
 def parse_resource_attributes():
@@ -64,6 +68,12 @@ metrics.set_meter_provider(meter_provider)
 meter = metrics.get_meter(__name__, "1.0.0")
 request_counter = meter.create_counter("demo_requests_total", description="Total requests")
 
+log_exp = OTLPLogExporter(endpoint=endpoint, insecure=True, headers=headers)
+logger_provider = LoggerProvider(resource=resource)
+logger_provider.add_log_record_processor(BatchLogRecordProcessor(log_exp))
+_logs.set_logger_provider(logger_provider)
+logging.getLogger().addHandler(LoggingHandler(level=logging.NOTSET, logger_provider=logger_provider))
+
 
 def application(environ, start_response):
     path = environ.get("PATH_INFO", "/")
@@ -72,6 +82,7 @@ def application(environ, start_response):
         body = json.dumps({"status": "ok", "service": service_name}).encode()
     else:
         request_counter.add(1)
+        logging.getLogger(__name__).info("Request received", extra={"path": path})
         body = json.dumps({
             "message": "SigNoz Python demo",
             "service": service_name,
@@ -87,6 +98,7 @@ app = OpenTelemetryMiddleware(application)
 def shutdown(signum=None, frame=None):
     tracer_provider.shutdown()
     meter_provider.shutdown()
+    logger_provider.shutdown()
 
 
 if __name__ == "__main__":

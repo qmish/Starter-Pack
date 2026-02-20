@@ -56,7 +56,16 @@
 
 ---
 
-## 7. Автоинструментация
+## 7. Логи OTLP
+
+- [x] Python: LoggerProvider + OTLPLogExporter + LoggingHandler (bridge stdlib logging)
+- [x] .NET: WithLogging() + AddOtlpExporter
+- [ ] Go: otlplog (beta, опционально)
+- [ ] Java: LoggerProvider + OTLP log exporter (опционально)
+
+---
+
+## 8. Автоинструментация
 
 - [x] Node.js — `@opentelemetry/auto-instrumentations-node` (--require при запуске)
 - [x] Python — `opentelemetry-instrumentation-wsgi` + OpenTelemetryMiddleware (WSGI)
@@ -69,14 +78,14 @@
 
 ## Итог
 
-| Стек   | Health | Bootstrap | Метрики | Shutdown | Resource attrs | Cloud headers | Автоинструментация |
-|--------|--------|-----------|---------|----------|----------------|---------------|--------------------|
-| Node   | [x]    | —         | auto    | [x]      | auto           | auto          | [x]                |
-| Python | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
-| Go     | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
-| .NET   | [x]    | —         | [x]     | [x]      | auto           | auto          | [x]                |
-| Java   | [x]    | —         | [x]     | [x]      | [x]            | [x]           | [x]                |
-| PHP    | [x]    | [x]       | —       | —        | —              | —             | опц.               |
+| Стек   | Health | Bootstrap | Метрики | Логи  | Shutdown | Resource attrs | Cloud headers | Автоинструментация |
+|--------|--------|-----------|---------|-------|----------|----------------|---------------|--------------------|
+| Node   | [x]    | —         | auto    | auto  | [x]      | auto           | auto          | [x]                |
+| Python | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
+| Go     | [x]    | —         | [x]     | —     | [x]      | [x]            | [x]           | [x]                |
+| .NET   | [x]    | —         | [x]     | [x]   | [x]      | auto           | auto          | [x]                |
+| Java   | [x]    | —         | [x]     | —     | [x]      | [x]            | [x]           | [x]                |
+| PHP    | [x]    | [x]       | —       | —     | —        | —              | —             | опц.               |
 
 ---
 

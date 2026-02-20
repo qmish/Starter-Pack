@@ -1,3 +1,4 @@
+using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -12,6 +13,8 @@ builder.Services.AddOpenTelemetry()
         .AddOtlpExporter())
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
+        .AddOtlpExporter())
+    .WithLogging(logging => logging
         .AddOtlpExporter());
 
 var app = builder.Build();

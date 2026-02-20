@@ -7,3 +7,4 @@ opentelemetry-exporter-otlp-proto-grpc>=1.28.0
 opentelemetry-instrumentation>=0.49.0
 opentelemetry-instrumentation-wsgi>=0.49.0
 opentelemetry-exporter-otlp-proto-grpc-metrics>=1.28.0
+opentelemetry-exporter-otlp-proto-grpc-logs>=1.28.0
