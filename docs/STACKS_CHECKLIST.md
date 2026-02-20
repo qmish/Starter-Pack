@@ -77,7 +77,7 @@
 - [x] Go — `go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp`
 - [x] .NET — `AddAspNetCoreInstrumentation`, `AddHttpClientInstrumentation`
 - [x] Java — `-Pagent` для запуска с `-javaagent:opentelemetry-javaagent.jar`
-- [ ] PHP — опционально `OTEL_PHP_AUTOLOAD_ENABLED` + auto-пакеты под фреймворк (Laravel и др.)
+- [ ] PHP — опционально: `OTEL_PHP_AUTOLOAD_ENABLED` + пакеты под фреймворк (см. stacks/php/README.md)
 
 ---
 

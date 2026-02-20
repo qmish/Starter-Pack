@@ -1,6 +1,12 @@
 # PHP + SigNoz
 
-Инструментация PHP (Laravel, Symfony, WordPress, Slim и др.) через OpenTelemetry и отправка трейсов в SigNoz.
+Инструментация PHP (Laravel, Symfony, WordPress, Slim и др.) через OpenTelemetry: трейсы, метрики и логи в SigNoz.
+
+## Что есть в демо
+
+- **bootstrap.php** — инициализация TracerProvider, MeterProvider, LoggerProvider с OTLP (traces, metrics, logs), graceful shutdown.
+- **Health** — `GET /health` возвращает `{"status":"ok","service":"..."}`.
+- Переменные: `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME`, `OTEL_RESOURCE_ATTRIBUTES`, `OTEL_EXPORTER_OTLP_HEADERS` (SigNoz Cloud).
 
 ## Требования
 
@@ -36,7 +42,7 @@ composer require \
   php-http/guzzle7-adapter
 ```
 
-Для авто-инструментации по фреймворку добавьте один из пакетов:
+**Опционально: автоинструментация.** Включите `OTEL_PHP_AUTOLOAD_ENABLED=true` и установите пакет под фреймворк:
 
 - **Laravel:** `open-telemetry/opentelemetry-auto-laravel`
 - **Slim:** `open-telemetry/opentelemetry-auto-slim`
@@ -63,7 +69,8 @@ php -S localhost:8080
 
 ## Проверка
 
-- Вкладка **Traces** в SigNoz — появление трейсов после запросов к приложению.
+- **Traces / Metrics / Logs** в SigNoz — появление данных после запросов к приложению.
+- Health: `curl http://localhost:8080/health`.
 - При проблемах: `OTEL_TRACES_EXPORTER=console php -S ...` — вывод спанов в консоль.
 
 Подробнее: [SigNoz — PHP](https://signoz.io/docs/instrumentation/opentelemetry-php/).

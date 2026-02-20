@@ -106,7 +106,7 @@ export OTEL_SERVICE_NAME=my-node-app
     ├── LOGGING_FILTERING.md           # Фильтрация логов по уровням и кодам ошибок
     ├── TRACING_SETUP.md               # Трассировка по стекам и системам
     ├── TERRAFORM_ANSIBLE.md           # Развёртывание коллектора: Terraform, Ansible
-    ├── STACKS_CHECKLIST.md            # Чек-лист доработок стеков (health, метрики, shutdown)
+    ├── STACKS_CHECKLIST.md            # Чек-лист доработок стеков (health, метрики, логи, shutdown, resource attrs, Cloud)
     └── RUNBOOK.md                     # Чеклист первого запуска, демо по стекам
 ```
 
