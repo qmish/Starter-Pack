@@ -27,6 +27,7 @@
 - [x] Go: OTLP metric exporter
 - [x] .NET: AddMetrics() + AddOtlpExporter
 - [x] Java: OTLP metrics exporter
+- [x] PHP: MeterProvider + MetricExporterFactory + ExportingReader
 
 ---
 
@@ -62,6 +63,7 @@
 - [x] .NET: WithLogging() + AddOtlpExporter
 - [x] Go: otlplog/otlploggrpc + sdk/log (beta)
 - [x] Java: SdkLoggerProvider + OtlpGrpcLogExporter + getLogsBridge()
+- [x] PHP: LoggerProvider + LogsExporterFactory + BatchLogRecordProcessor
 
 ---
 
@@ -85,7 +87,7 @@
 | Go     | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
 | .NET   | [x]    | —         | [x]     | [x]   | [x]      | auto           | auto          | [x]                |
 | Java   | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
-| PHP    | [x]    | [x]       | —       | —     | —        | —              | —             | опц.               |
+| PHP    | [x]    | [x]       | [x]     | [x]   | [x]      | —              | —             | опц.               |
 
 ---
 
