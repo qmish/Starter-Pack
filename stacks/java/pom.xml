@@ -39,6 +39,17 @@
       <artifactId>opentelemetry-sdk</artifactId>
       <version>${opentelemetry.version}</version>
     </dependency>
+    <!-- Logs API and SDK -->
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api-logs</artifactId>
+      <version>${opentelemetry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-sdk-logs</artifactId>
+      <version>${opentelemetry.version}</version>
+    </dependency>
     <!-- Optional: auto-instrumentation agent (use as -javaagent) -->
     <dependency>
       <groupId>io.opentelemetry.javaagent</groupId>

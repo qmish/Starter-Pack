@@ -8,6 +8,7 @@ import io.opentelemetry.api.metrics.LongCounter;
 import io.opentelemetry.api.metrics.Meter;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.Tracer;
+import io.opentelemetry.exporter.otlp.logs.OtlpGrpcLogExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
@@ -15,6 +16,8 @@ import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.api.common.AttributeKey;
 import io.opentelemetry.sdk.resources.Resource;
+import io.opentelemetry.sdk.logs.SdkLoggerProvider;
+import io.opentelemetry.sdk.logs.export.BatchLogRecordProcessor;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 
@@ -45,6 +48,10 @@ public class App {
         headers.forEach(metricExpBuilder::addHeader);
         var metricExp = metricExpBuilder.build();
 
+        var logExpBuilder = OtlpGrpcLogExporter.builder().setEndpoint(endpoint).setUseTls(false);
+        headers.forEach(logExpBuilder::addHeader);
+        var logExp = logExpBuilder.build();
+
         SdkTracerProvider tracerProvider = SdkTracerProvider.builder()
                 .setResource(resource)
                 .addSpanProcessor(BatchSpanProcessor.builder(traceExp).build())
@@ -53,19 +60,26 @@ public class App {
                 .setResource(resource)
                 .registerMetricReader(PeriodicMetricReader.builder(metricExp).setInterval(java.time.Duration.ofSeconds(30)).build())
                 .build();
+        SdkLoggerProvider loggerProvider = SdkLoggerProvider.builder()
+                .setResource(resource)
+                .addLogRecordProcessor(BatchLogRecordProcessor.builder(logExp).build())
+                .build();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             tracerProvider.close();
             meterProvider.close();
+            loggerProvider.close();
         }));
 
         OpenTelemetrySdk.initializeGlobal(OpenTelemetrySdk.builder()
                 .setTracerProvider(tracerProvider)
                 .setMeterProvider(meterProvider)
+                .setLoggerProvider(loggerProvider)
                 .build());
 
         Tracer tracer = GlobalOpenTelemetry.getTracer("java-demo", "1.0.0");
         Meter meter = GlobalOpenTelemetry.getMeter("java-demo", "1.0.0");
+        var logger = GlobalOpenTelemetry.getLogsBridge().get("java-demo", "1.0.0");
         LongCounter requestCounter = meter.counterBuilder("demo_requests_total").setDescription("Total requests").build();
 
         int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
@@ -83,6 +97,11 @@ public class App {
                 try {
                     requestCounter.add(1);
                     String path = exchange.getRequestURI().getPath();
+                    logger.logRecordBuilder()
+                            .setBody("Request received")
+                            .setSeverity(io.opentelemetry.api.logs.Severity.INFO)
+                            .setAttribute(AttributeKey.stringKey("path"), path)
+                            .emit();
                     String body = "{\"message\":\"SigNoz Java demo\",\"service\":\"" + serviceName + "\",\"path\":\"" + path + "\"}";
                     exchange.getResponseHeaders().set("Content-Type", "application/json");
                     exchange.sendResponseHeaders(200, body.getBytes(StandardCharsets.UTF_8).length);

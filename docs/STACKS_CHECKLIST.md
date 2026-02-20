@@ -60,8 +60,8 @@
 
 - [x] Python: LoggerProvider + OTLPLogExporter + LoggingHandler (bridge stdlib logging)
 - [x] .NET: WithLogging() + AddOtlpExporter
-- [ ] Go: otlplog (beta, опционально)
-- [ ] Java: LoggerProvider + OTLP log exporter (опционально)
+- [x] Go: otlplog/otlploggrpc + sdk/log (beta)
+- [x] Java: SdkLoggerProvider + OtlpGrpcLogExporter + getLogsBridge()
 
 ---
 
@@ -82,9 +82,9 @@
 |--------|--------|-----------|---------|-------|----------|----------------|---------------|--------------------|
 | Node   | [x]    | —         | auto    | auto  | [x]      | auto           | auto          | [x]                |
 | Python | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
-| Go     | [x]    | —         | [x]     | —     | [x]      | [x]            | [x]           | [x]                |
+| Go     | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
 | .NET   | [x]    | —         | [x]     | [x]   | [x]      | auto           | auto          | [x]                |
-| Java   | [x]    | —         | [x]     | —     | [x]      | [x]            | [x]           | [x]                |
+| Java   | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
 | PHP    | [x]    | [x]       | —       | —     | —        | —              | —             | опц.               |
 
 ---

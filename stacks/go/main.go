@@ -13,9 +13,12 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc"
+	"go.opentelemetry.io/otel/exporters/otlp/otlplog/otlploggrpc"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	sdklog "go.opentelemetry.io/otel/sdk/log"
 	sdkmetric "go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	otellog "go.opentelemetry.io/otel/log"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 )
@@ -51,6 +54,18 @@ func main() {
 		log.Fatal(err)
 	}
 
+	logOpts := []otlploggrpc.Option{
+		otlploggrpc.WithEndpoint(endpoint),
+		otlploggrpc.WithInsecure(),
+	}
+	if len(headers) > 0 {
+		logOpts = append(logOpts, otlploggrpc.WithHeaders(headers))
+	}
+	logExp, err := otlploggrpc.New(ctx, logOpts...)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	res := buildResource()
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithBatcher(traceExp),
@@ -60,9 +75,14 @@ func main() {
 		sdkmetric.WithReader(sdkmetric.NewPeriodicReader(metricExp)),
 		sdkmetric.WithResource(res),
 	)
+	lp := sdklog.NewLoggerProvider(
+		sdklog.WithResource(res),
+		sdklog.WithProcessor(sdklog.NewBatchProcessor(logExp)),
+	)
 	otel.SetTracerProvider(tp)
 	otel.SetMeterProvider(mp)
 	meter := otel.Meter("go-demo")
+	logger := lp.Logger("go-demo")
 	requestCounter, _ := meter.Int64Counter("demo_requests_total")
 
 	sigCh := make(chan os.Signal, 1)
@@ -71,6 +91,7 @@ func main() {
 		<-sigCh
 		_ = tp.Shutdown(ctx)
 		_ = mp.Shutdown(ctx)
+		_ = lp.Shutdown(ctx)
 		os.Exit(0)
 	}()
 
@@ -81,6 +102,11 @@ func main() {
 	})
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		requestCounter.Add(r.Context(), 1)
+		rec := otellog.Record{}
+		rec.SetSeverity(otellog.SeverityInfo)
+		rec.SetBody(otellog.StringValue("Request received"))
+		rec.AddAttributes(otellog.String("path", r.URL.Path))
+		logger.Emit(r.Context(), rec)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{
 			"message": "SigNoz Go demo",
