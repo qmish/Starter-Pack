@@ -38,6 +38,7 @@
 - [x] Go
 - [x] .NET (через IHostApplicationLifetime в OTel)
 - [x] Java
+- [x] PHP (setAutoShutdown в Sdk)
 
 ---
 
@@ -46,6 +47,7 @@
 - [x] Python
 - [x] Go
 - [x] Java
+- [x] PHP (ResourceInfoFactory::defaultResource())
 
 ---
 
@@ -54,6 +56,7 @@
 - [x] Python
 - [x] Go
 - [x] Java
+- [x] PHP (OtlpHttpTransportFactory, MetricExporterFactory, LogsExporterFactory)
 
 ---
 
@@ -87,7 +90,7 @@
 | Go     | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
 | .NET   | [x]    | —         | [x]     | [x]   | [x]      | auto           | auto          | [x]                |
 | Java   | [x]    | —         | [x]     | [x]   | [x]      | [x]            | [x]           | [x]                |
-| PHP    | [x]    | [x]       | [x]     | [x]   | [x]      | —              | —             | опц.               |
+| PHP    | [x]    | [x]       | [x]     | [x]   | [x]      | [x]            | [x]           | опц.               |
 
 ---
 
