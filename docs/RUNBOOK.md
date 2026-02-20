@@ -14,7 +14,7 @@
 | **2** | `.env` | В корне репозитория: `cp .env.example .env`. В `.env` указать `SIGNOZ_OTEL_ENDPOINT` и для Cloud — `SIGNOZ_INGESTION_KEY`. |
 | **3** | Конфиг коллектора | Создать `collector/config.yaml` из шаблона с подставленным endpoint и ключом. **Вариант A:** запустить скрипт (читает `.env`):<br>• Windows: `.\scripts\prepare-config.ps1 -Preset full`<br>• Linux/macOS: `./scripts/prepare-config.sh full`<br>**Вариант B:** вручную скопировать `collector/config.full.yaml` в `collector/config.yaml` и заменить в нём `<SIGNOZ_ENDPOINT>` и `<INGESTION_KEY>`. |
 | **4** | Коллектор | Запустить: `docker compose -f docker-compose.collector.yml up -d`. Проверить: `docker compose -f docker-compose.collector.yml ps` — контейнер в состоянии running. |
-| **5** | Демо по стеку | Перейти в каталог нужного стека, установить зависимости и запустить демо-приложение (см. таблицу ниже). Сделать несколько запросов к локальному URL. В SigNoz открыть **Traces** / **Logs** и убедиться, что телеметрия появилась. |
+| **5** | Демо по стеку | Перейти в каталог нужного стека, установить зависимости и запустить демо-приложение (см. таблицу ниже). Сделать несколько запросов к локальному URL. В SigNoz открыть **Traces**, **Metrics**, **Logs** и убедиться, что телеметрия появилась. |
 
 ---
 
@@ -31,7 +31,9 @@
 | **Java** | `stacks/java` | `mvn compile` | `mvn exec:java` или `mvn exec:java -Pagent` (с автоинструментацией) | http://localhost:8080 |
 | **PHP** | `stacks/php` | `composer install` | `php -S localhost:8080` | http://localhost:8080 |
 
-Перед запуском задайте переменные окружения из `env.example` в каталоге стека (или экспортируйте в shell). Минимум: `OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317`, `OTEL_SERVICE_NAME=<имя-сервиса>`.
+Во всех стеках доступен **GET /health** для проверки живости сервиса.
+
+Перед запуском задайте переменные окружения из `env.example` в каталоге стека (или экспортируйте в shell). Минимум: `OTEL_EXPORTER_OTLP_ENDPOINT` (gRPC: `http://localhost:4317`, HTTP: `http://localhost:4318`), `OTEL_SERVICE_NAME=<имя-сервиса>`. Для PHP по умолчанию используется HTTP (порт 4318).
 
 ---
 
